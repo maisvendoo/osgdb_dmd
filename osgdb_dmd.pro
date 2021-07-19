@@ -17,7 +17,7 @@ win32 {
 
     CONFIG(debug, debug|release) {
 
-        TARGET = $$join(TARGET,,,d)
+        #TARGET = $$join(TARGET,,,d)
 
         LIBS += -L$$OSG_LIB_DIRECTORY -losgd
         LIBS += -L$$OSG_LIB_DIRECTORY -losgViewerd
@@ -40,17 +40,17 @@ win32 {
 
 unix {
 
-    DESTDIR = /usr/lib/osgPlugins-3.7.0
+    DESTDIR = ../../plugins
 
     CONFIG(debug, debug|release) {
 
-        TARGET = $$join(TARGET,,,d)
+        #TARGET = $$join(TARGET,,,d)
 
-        LIBS += -losgd
-        LIBS += -losgViewerd
-        LIBS += -losgDBd
-        LIBS += -lOpenThreadsd
-        LIBS += -losgUtild
+        LIBS += -losg
+        LIBS += -losgViewer
+        LIBS += -losgDB
+        LIBS += -lOpenThreads
+        LIBS += -losgUtil
 
     } else {
 

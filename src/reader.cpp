@@ -41,12 +41,7 @@ osgDB::ReaderWriter::ReadResult ReaderDMD::readNode(std::ifstream &stream,
 {
     (void) options;
 
-    dmd_multimesh_t multimesh = load_dmd(stream);
-
-    if (multimesh.meshes.size() > 1)
-    {
-        int zu = 0;
-    }
+    dmd_multimesh_t multimesh = load_dmd(stream);   
 
     osg::ref_ptr<osg::Geode> geode = new osg::Geode;
 

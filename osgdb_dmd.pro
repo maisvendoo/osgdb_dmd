@@ -19,11 +19,11 @@ win32 {
 
         #TARGET = $$join(TARGET,,,d)
 
-        LIBS += -L$$OSG_LIB_DIRECTORY -losgd
-        LIBS += -L$$OSG_LIB_DIRECTORY -losgViewerd
-        LIBS += -L$$OSG_LIB_DIRECTORY -losgDBd
-        LIBS += -L$$OSG_LIB_DIRECTORY -lOpenThreadsd
-        LIBS += -L$$OSG_LIB_DIRECTORY -losgUtild
+        LIBS += -L$$OSG_LIB_DIRECTORY -losg
+        LIBS += -L$$OSG_LIB_DIRECTORY -losgViewer
+        LIBS += -L$$OSG_LIB_DIRECTORY -losgDB
+        LIBS += -L$$OSG_LIB_DIRECTORY -lOpenThreads
+        LIBS += -L$$OSG_LIB_DIRECTORY -losgUtil
 
     } else {
 

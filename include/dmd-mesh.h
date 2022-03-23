@@ -31,6 +31,7 @@ struct dmd_mesh_t
         osg::Vec3 v2 = vertices->at(face[2]);
 
         osg::Vec3 n = (v1 - v0) ^ (v2 - v0);
+        //osg::Vec3 n = (v2 - v0) ^ (v1 - v0);
 
         return n * (1 / n.length());
     }

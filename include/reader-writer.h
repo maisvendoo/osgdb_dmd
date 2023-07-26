@@ -4,8 +4,8 @@
 //
 //
 //------------------------------------------------------------------------------
-#ifndef     READER_H
-#define     READER_H
+#ifndef     READER-WRITER_H
+#define     READER-WRITER_H
 
 #include    <osg/Geometry>
 #include    <osg/Geode>
@@ -17,11 +17,11 @@
 //------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------
-class ReaderDMD : public osgDB::ReaderWriter
+class ReaderWriterDMD : public osgDB::ReaderWriter
 {
 public:
 
-    ReaderDMD();
+    ReaderWriterDMD();
 
     virtual ReadResult readNode(const std::string &filepath,
                                 const osgDB::Options *options) const;
@@ -29,9 +29,15 @@ public:
     virtual ReadResult readNode(std::ifstream &stream,
                                 const osgDB::Options *options) const;
 
+    virtual WriteResult writeNode(const osg::Node &node, const std::string &path,
+                                  const osgDB::Options *options) const;
+
+    virtual WriteResult writeNode(const osg::Node &node, std::ofstream &path,
+                                  const osgDB::Options *options) const;
+
 private:
 
 
 };
 
-#endif // READER_H
+#endif // READER-WRITER_H

@@ -1,10 +1,10 @@
-#include    "reader.h"
+#include    "reader-writer.h"
 #include    "dmd-parser.h"
 
 //------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------
-ReaderDMD::ReaderDMD()
+ReaderWriterDMD::ReaderWriterDMD()
 {
     supportsExtension("dmd", "DGLEngine model file");
 }
@@ -12,7 +12,7 @@ ReaderDMD::ReaderDMD()
 //------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------
-osgDB::ReaderWriter::ReadResult ReaderDMD::readNode(const std::string &filepath,
+osgDB::ReaderWriter::ReadResult ReaderWriterDMD::readNode(const std::string &filepath,
                                                     const osgDB::Options *options) const
 {
     std::string ext = osgDB::getLowerCaseFileExtension(filepath);
@@ -36,7 +36,7 @@ osgDB::ReaderWriter::ReadResult ReaderDMD::readNode(const std::string &filepath,
 //------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------
-osgDB::ReaderWriter::ReadResult ReaderDMD::readNode(std::ifstream &stream,
+osgDB::ReaderWriter::ReadResult ReaderWriterDMD::readNode(std::ifstream &stream,
                                                     const osgDB::Options *options) const
 {
     (void) options;
@@ -94,5 +94,37 @@ osgDB::ReaderWriter::ReadResult ReaderDMD::readNode(std::ifstream &stream,
     return geode.release();
 }
 
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
+osgDB::ReaderWriter::WriteResult ReaderWriterDMD::writeNode(const osg::Node &node,
+                                                            const std::string &filepath,
+                                                            const osgDB::Options *options) const
+{
+    std::string ext = osgDB::getLowerCaseFileExtension(filepath);
 
-REGISTER_OSGPLUGIN( dmd, ReaderDMD )
+    if (!acceptsExtension(ext))
+        return WriteResult::FILE_NOT_HANDLED;
+
+    std::ofstream stream(filepath.c_str(), std::ios::out);
+
+    if (!stream)
+        return WriteResult::ERROR_IN_WRITING_FILE;
+
+    return writeNode(node, stream, options);
+}
+
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
+osgDB::ReaderWriter::WriteResult ReaderWriterDMD::writeNode(const osg::Node &node,
+                                                            std::ofstream &stream,
+                                                            const osgDB::Options *options) const
+{
+
+
+    return WriteResult::FILE_SAVED;
+}
+
+
+REGISTER_OSGPLUGIN( dmd, ReaderWriterDMD )

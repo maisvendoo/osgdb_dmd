@@ -32,7 +32,7 @@ public:
     virtual WriteResult writeNode(const osg::Node &node, const std::string &path,
                                   const osgDB::Options *options) const;
 
-    virtual WriteResult writeNode(const osg::Node &node, std::ofstream &path,
+    virtual WriteResult writeNode(const osg::Node &node, std::ostream &path,
                                   const osgDB::Options *options) const;
 
 private:

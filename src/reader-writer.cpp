@@ -1,5 +1,6 @@
 #include    "reader-writer.h"
 #include    "dmd-parser.h"
+#include    "dmd-writer-visitor.h"
 
 //------------------------------------------------------------------------------
 //
@@ -118,10 +119,12 @@ osgDB::ReaderWriter::WriteResult ReaderWriterDMD::writeNode(const osg::Node &nod
 //
 //------------------------------------------------------------------------------
 osgDB::ReaderWriter::WriteResult ReaderWriterDMD::writeNode(const osg::Node &node,
-                                                            std::ofstream &stream,
+                                                            std::ostream &stream,
                                                             const osgDB::Options *options) const
 {
+    DMDWriterVisitor dmd_nv(stream);
 
+    (const_cast<osg::Node *>(&node))->accept(dmd_nv);
 
     return WriteResult::FILE_SAVED;
 }

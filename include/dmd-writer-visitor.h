@@ -27,6 +27,8 @@ private:
 
    dmd_content_t texcoord_list;
 
+   dmd_content_t texface_list;
+
     void delete_dublicated_vertices(osg::Vec3Array *vertices);
 
     void create_dmd(int mode, osg::Geometry &geom);

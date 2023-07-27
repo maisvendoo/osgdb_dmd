@@ -67,7 +67,13 @@ void DMDWriterVisitor::create_dmd(int mode, osg::Geometry &geom)
     {
         case GL_TRIANGLES:
         {
-            process_triangles(geom);
+            process_triangles(geom, 3);
+            break;
+        }
+
+        case GL_TRIANGLE_STRIP:
+        {
+            process_triangles(geom, 1);
             break;
         }
 
@@ -80,11 +86,11 @@ void DMDWriterVisitor::create_dmd(int mode, osg::Geometry &geom)
 //------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------
-void DMDWriterVisitor::process_triangles(osg::Geometry &geom)
+void DMDWriterVisitor::process_triangles(osg::Geometry &geom, size_t step)
 {
     osg::Vec3Array *vertices = dynamic_cast<osg::Vec3Array *>(geom.getVertexArray());
 
-    for (size_t i = 0; i < vertices->getNumElements(); i = i + 3)
+    for (size_t i = 0; i < vertices->getNumElements(); ++i)
     {
         std::stringstream v1_ss;
 
@@ -93,24 +99,10 @@ void DMDWriterVisitor::process_triangles(osg::Geometry &geom)
              << vertices->at(i).z();
 
         vertex_list.push_back(v1_ss.str());
+    }
 
-        std::stringstream v2_ss;
-
-        v2_ss << "\t" << vertices->at(i+1).x() << " "
-             << vertices->at(i+1).y() << " "
-             << vertices->at(i+1).z();
-
-        vertex_list.push_back(v2_ss.str());
-
-        std::stringstream v3_ss;
-
-        v3_ss << "\t" << vertices->at(i+2).x() << " "
-             << vertices->at(i+2).y() << " "
-             << vertices->at(i+2).z();
-
-        vertex_list.push_back(v3_ss.str());
-
-
+    for (size_t i = 0; i <= vertices->getNumElements() - step; i += step)
+    {
         std::stringstream f_ss;
 
         f_ss << "\t" << i + 1 << " "
@@ -122,7 +114,10 @@ void DMDWriterVisitor::process_triangles(osg::Geometry &geom)
 
     osg::Vec2Array *texcoords = dynamic_cast<osg::Vec2Array *>(geom.getTexCoordArray(0));
 
-    for (size_t i = 0; i < texcoords->getNumElements(); i = i + 2)
+    if (texcoords == nullptr)
+        return;
+
+    for (size_t i = 0; i < texcoords->getNumElements(); ++i)
     {
         std::stringstream t1_ss;
 
@@ -130,14 +125,11 @@ void DMDWriterVisitor::process_triangles(osg::Geometry &geom)
               << 1.0 - texcoords->at(i).y() << " 0.0";
 
         texcoord_list.push_back(t1_ss.str());
+    }
 
-        std::stringstream t2_ss;
 
-        t2_ss << "\t" << texcoords->at(i+1).x() << " "
-              << 1.0 - texcoords->at(i+1).y() << " 0.0";
-
-        texcoord_list.push_back(t2_ss.str());
-
+    for (size_t i = 0; i <= texcoords->getNumElements() - step; i += step)
+    {
         std::stringstream tf_ss;
 
         tf_ss << "\t" << i + 1 << " "
@@ -177,27 +169,33 @@ void DMDWriterVisitor::write_dmd(std::ostream &stream)
     }
 
     stream << "end faces" << std::endl
-           << "end mesh" << std::endl
-           << "New Texture:" << std::endl
-           << "numtverts numtvfaces" << std::endl
-           << "\t" << texcoord_list.size() << "\t"
-           << texface_list.size() << std::endl
-           << "Texture vertices:" << std::endl;
+           << "end mesh" << std::endl;
 
-    for (size_t i = 0; i < texcoord_list.size(); ++i)
+
+    if (!texcoord_list.empty())
     {
-        stream << texcoord_list[i] << std::endl;
+        stream << "New Texture:" << std::endl
+               << "numtverts numtvfaces" << std::endl
+               << "\t" << texcoord_list.size() << "\t"
+               << texface_list.size() << std::endl
+               << "Texture vertices:" << std::endl;
+
+        for (size_t i = 0; i < texcoord_list.size(); ++i)
+        {
+            stream << texcoord_list[i] << std::endl;
+        }
+
+        stream << "end texture vertices" << std::endl
+               << "Texture faces:" << std::endl;
+
+        for (size_t i = 0; i < texface_list.size(); ++i)
+        {
+            stream << texface_list[i] << std::endl;
+        }
+
+        stream << "end texture faces" << std::endl
+               << "end of texture" << std::endl;
     }
 
-    stream << "end texture vertices" << std::endl
-           << "Texture faces:" << std::endl;
-
-    for (size_t i = 0; i < texface_list.size(); ++i)
-    {
-        stream << texface_list[i] << std::endl;
-    }
-
-    stream << "end texture faces" << std::endl
-           << "end of texture" << std::endl
-           << "end of file" << std::endl;
+    stream << "end of file" << std::endl;
 }

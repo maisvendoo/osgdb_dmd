@@ -33,7 +33,7 @@ private:
 
     void create_dmd(int mode, osg::Geometry &geom);
 
-    void process_triangles(osg::Geometry &geom);
+    void process_triangles(osg::Geometry &geom, size_t step);
 
     void write_dmd(std::ostream &stream);
 };
